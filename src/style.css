@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 body {
+  height: 100vh;
+  background: linear-gradient(to bottom, #ea5b3d, #ea5b3d 20%, #d4dbd9 20%, #d4dbd9);
+  background-repeat: no-repeat;
+  background-position: cover;
   margin: 0;
   padding: 0;
 }
