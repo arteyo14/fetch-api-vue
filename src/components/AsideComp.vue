@@ -1,11 +1,22 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref,onMounted, computed } from 'vue';
 import getData from '../service/service';
 
-const users = ref(null)
+const users = ref([])
 const searchTerms = ref("");
-
 onMounted(() => getData(users));
+
+const filterUsers = computed(() => {
+    let result = users.value;
+    result = result.filter(user => {
+        let userName = `${user.name.title}.${user.name.first} ${user.name.last}`;
+        let searchValue = searchTerms.value;
+        let checkUserName = userName.toLowerCase().includes(searchValue.toLowerCase());
+        let checkUserEmail = user.email.toLowerCase().includes(searchValue.toLowerCase());
+        return checkUserName || checkUserEmail;
+    })
+    return result;
+})
 
 </script>
 
@@ -21,12 +32,12 @@ onMounted(() => getData(users));
             <div class="flex items-center p-4 bg-[#F6F6F6] h-14">
                 <div class="flex w-[100%] items-center gap-4 bg-white rounded-full p-2 ">
                     <label class="ml-2" for="search__input">search</label>
-                    <input v-model="searchTerms" class="w-full h-[100%] focus:outline-none rounded-lg bg-transparent" id="search__input" type="search" placeholder="Search your friend">
+                    <input v-model="searchTerms" class="w-full h-[100%] focus:outline-none bg-transparent" id="search__input" type="search" placeholder="Search your friend">
                 </div>
             </div>
         </div>
         <div class="overflow-auto">
-            <ul class="w-full" v-for="user in users" :key="user.id">
+            <ul class="w-full" v-for="user in filterUsers" :key="user.id">
                 <li class="flex w-[100%] items-center gap-4 px-4 py-2 hover:bg-[#ededed] cursor-pointer">
                     <img class="w-18 h-18 rounded-full" :src="user.picture.medium" alt="user-img">
                     <div>
